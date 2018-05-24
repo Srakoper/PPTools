@@ -529,7 +529,7 @@ for i in range(1, len(sheet["A"]), 2):
             new_clicks = None
             new_impressions = None
             new_CTR = None
-        if new_clicks != None:
+        if new_clicks != None and new_impressions > 0:
             unpauseToEndOfMonth(sheet, day, days, days_in_current_month, no_fill, "TSmedia")  # marks cells possibly marked as paused as unpaused
             sheet[days[day][0] + str(i + 2)] = new_clicks
         if exceptions:
@@ -545,7 +545,9 @@ for i in range(1, len(sheet["A"]), 2):
             elif clicks_TSmedia >= round(sheet["L"][i+1].value * 0.25): sheet["L"][i+1].fill = yellow
             else: sheet["L"][i+1].fill = red
         else: # marks paused campaigns until end of month
-            pauseToEndOfMonth(sheet, day, days, days_in_current_month, grey, "TSmedia")
+            try:
+                if new_impressions > 0: pauseToEndOfMonth(sheet, day, days, days_in_current_month, grey, "TSmedia")
+            except TypeError: pauseToEndOfMonth(sheet, day, days, days_in_current_month, grey, "TSmedia")
         if new_impressions != None: sheet["N" + str(i + 2)] = new_impressions # updates impressions
         if new_CTR != None: sheet["O" + str(i + 2)] = new_CTR # updates CTR
 # current total clicks & impressions % CTR & performance

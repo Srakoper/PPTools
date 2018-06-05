@@ -195,6 +195,7 @@ except KeyError: # create sheet for new month if not existing
     applyBorders(sheet, top_border_sheet, bottom_border_sheet, top_left_border_sheet, top_right_border_sheet, bottom_left_border_sheet, bottom_right_border_sheet)
     applyBorders(last_found_sheet, top_border_sheet, bottom_border_sheet, top_left_border_sheet, top_right_border_sheet,
                  bottom_left_border_sheet, bottom_right_border_sheet)
+    sheet.freeze_panes = sheet["S2"]
 while True:
     try:
         wb.save(parent_dir + "Poslovni-pregled.xlsx")

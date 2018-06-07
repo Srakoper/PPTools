@@ -87,7 +87,11 @@ var surpluses =
 'OP0775790P - Apolonija Strehar, s.p.': 366,
 'OP0774854P - Vrtec Velenje': 273,
 'OP0776274 - Peter Ocvirk s.p.': 0,
-'OP0776132P - Tekoma Marguč, d.o.o.': 500
+'OP0776132P - Tekoma Marguč, d.o.o.': 500,
+'OP0775587P - Vaš dom d.o.o.': 150,
+'OP0775997P - Liko Liboje d.d.': 500,
+'OP0774661P - Kego d.o.o.': 448,
+'OP0776282P - Marija Polak Rožič s.p.': 500
 };
 
 /**
@@ -231,7 +235,7 @@ function startSearchIfLowCPCElseDisplay(acc, threshold) {
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
-    if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
+    if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP 
       if (campaign.getName().toLowerCase().search("display") > -1) { // processes display campaigns
         var lastDisplayCPC = campaign.getStatsFor("LAST_MONTH").getAverageCpc();
         if (lastDisplayCPC === 0) { // if display campaign CPC === 0, overall CPC value is fetched
@@ -426,6 +430,7 @@ function isEnabled(acc) {
 function switchCampaigns(acc, OP, activeCmpName, package) {
   MccApp.select(acc);
   var campaigns = {"enabled": [], "paused": []};
+  var enabled = false;
   if (activeCmpName.toLowerCase().indexOf("display") !== -1) {
     var display = true;
   } else {
@@ -438,24 +443,33 @@ function switchCampaigns(acc, OP, activeCmpName, package) {
       if (display) { // enable all search campaigns containing OP
         if (!(campaign.getName().toLowerCase().indexOf("display") !== -1) && campaign.getName().substring(0, 9) === OP) {
           campaign.enable();
+          enabled = true;
           campaigns["enabled"].push(campaign.getName());
           Logger.log("Campaign " + campaign.getName() + " enabled!");
         }
       } else { // enable all display campaigns containing OP
         if (campaign.getName().toLowerCase().indexOf("display") !== -1 && campaign.getName().substring(0, 9) === OP) {
           campaign.enable();
+          enabled = true;
           campaigns["enabled"].push(campaign.getName());
           Logger.log("Campaign " + campaign.getName() + " enabled!");
         }
       }
-    } else {
-      campaign.pause(); // pause currently active campaign
-      campaigns["paused"].push(campaign.getName());
-      Logger.log("Campaign " + campaign.getName() + " paused!");
     }
   }
-  setDefaultBudget(acc, "Poslovni " + package);
-  return campaigns;
+  if (enabled) { // pauses active campaign iff one or more campaigns were enabled in previous step
+    var campaignIterator = AdWordsApp.campaigns().get();
+    while (campaignIterator.hasNext()) {
+      if (campaign.getName() === activeCmpName) {
+        campaign.pause(); // pause currently active campaign
+        campaigns["paused"].push(campaign.getName());
+        Logger.log("Campaign " + campaign.getName() + " paused!");
+      }
+    }
+    setDefaultBudget(acc, "Poslovni " + package);
+    return campaigns;
+  }
+  return false; // returns false if no campaigns were switched
 }
 
 /**
@@ -489,7 +503,7 @@ function adjustBudgetGAdW(acc, company, owner, pausedByScript, emailTotalSentByS
   var clicksGAdWProjected = Math.floor(clicksGAdWPerDay * daysRemaining);
   var clicksTSmediaPerDay = clicksTSmedia / daysRunning;
   var clicksTSmediaProjected = Math.floor(clicksTSmediaPerDay * daysRemaining);
-  if ((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) < 0.75) { // send email alert if campaign underperforming (ratio of generated total clicks / total goal to days running / total days is < 75%)
+  if (getDaysRemaining() <= 15 && (clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) < 0.75) { // send email alert if 15 or less days in month remaining and if campaign underperforming (ratio of generated total clicks / total goal to days running / total days is < 75%)
     sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
     //sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
   }
@@ -557,10 +571,15 @@ function adjustBudgetGAdW(acc, company, owner, pausedByScript, emailTotalSentByS
         sumCPCs += cmpCPC;
         if (cmpCPC > 0.15) { // sends email alert if campaign CPC > €0.15
           var switched = switchCampaigns(acc, company.getOP(), campaign.getName(), company.getPackage());
-          sendEmail("damjan.mihelic@tsmedia.si", "GAdW CPC Over €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC + "\n\nCAMPAIGNS SWITCHED\nPaused campaign(s): " + switched["paused"] + "\nEnabled campaign(s): " + switched["enabled"]);
-          sendEmail("maja.cebulj@tsmedia.si", "GAdW CPC Over €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC + "\n\nCAMPAIGNS SWITCHED\nPaused campaign(s): " + switched["paused"] + "\nEnabled campaign(s): " + switched["enabled"]);
-          //sendEmail("damjan.mihelic@tsmedia.si", "GAdW CPC > €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC);
-          //sendEmail("maja.cebulj@tsmedia.si", "GAdW CPC > €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC);
+          if (switched) {
+            sendEmail("damjan.mihelic@tsmedia.si", "GAdW CPC Over €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC + "\n\nCAMPAIGNS SWITCHED\nPaused campaign(s): " + switched["paused"] + "\nEnabled campaign(s): " + switched["enabled"]);
+            sendEmail("maja.cebulj@tsmedia.si", "GAdW CPC Over €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC + "\n\nCAMPAIGNS SWITCHED\nPaused campaign(s): " + switched["paused"] + "\nEnabled campaign(s): " + switched["enabled"]);
+            //sendEmail("damjan.mihelic@tsmedia.si", "GAdW CPC > €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC);
+            //sendEmail("maja.cebulj@tsmedia.si", "GAdW CPC > €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC);
+          } else {
+            sendEmail("damjan.mihelic@tsmedia.si", "GAdW CPC Over €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC + "\n\nNO CAMPAIGNS TO SWITCH!");
+            sendEmail("maja.cebulj@tsmedia.si", "GAdW CPC Over €0.15 Warning", "", "Account: " + company.getName() + "\nCampaign: " + campaign.getName() + "\nCPC: €" + cmpCPC + "\n\nNO CAMPAIGNS TO SWITCH!");
+          }
         }
       }
     }

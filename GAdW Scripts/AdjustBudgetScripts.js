@@ -76,12 +76,9 @@ var surpluses =
 'OP0772063 - Robert Repič, s.p.': 1,
 'OP0771867P - Paloma PIS, d.o.o.': 87,
 'OP0771875P - Baumuller Dravinja, d.o.o.': 448,
-'OP0772032P - Sberbank, d.d.': 511,
 'OP0773171P - Ika, d.o.o.': 430,
 'OP0774862P - Lichtenegger d.o.o.': 347,
-'OP0775083P - Ivan Ropotar, s.p.': 206,
 'OP0774669P - Lassana d.d.': 488,
-'OP0775385P - Almir, d.o.o.': 336,
 'OP0775384P - Ultramarin, d.o.o.': 473,
 'OP0775289P - Trelleborg Slovenija, d.o.o.': 500,
 'OP0775790P - Apolonija Strehar, s.p.': 366,
@@ -91,7 +88,11 @@ var surpluses =
 'OP0775587P - Vaš dom d.o.o.': 150,
 'OP0775997P - Liko Liboje d.d.': 500,
 'OP0774661P - Kego d.o.o.': 448,
-'OP0776282P - Marija Polak Rožič s.p.': 500
+'OP0776282P - Marija Polak Rožič s.p.': 500,
+'OP0777167P - Tomaž Luštrek, s.p.': 380,
+'OP0777489P - SMM, d.o.o.': 800,
+'OP0777761P - Gabrijela Ludvig-Zagožen': 122,
+'OP0777500P - Alpeks, d.o.o.': 500
 };
 
 /**
@@ -348,6 +349,31 @@ function startDisplayCampaigns(acc) {
 }
 
 /**
+ * Checks which campaigns in account are currently running: search, display, both or none.
+ * @param acc: account to check running campaigns in
+ * @return: str; "search" if search campaign(s) running, "display" if display campaign(s) running, "both" if both campaigns running, "none" if no campaign running
+ */
+function checkRunningCampaigns(acc) {
+  MccApp.select(acc);
+  var search = false;
+  var display = false;
+  var campaignIterator = AdWordsApp.campaigns().get();
+  while (campaignIterator.hasNext()) {
+    var campaign = campaignIterator.next();
+    if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
+      if (campaign.isEnabled()) {
+        if (campaign.getName().toLowerCase().search("display") > -1) {display = true;}
+        else {search = true;}
+      }
+    }
+  }
+  if (search && display) {return "both";}
+  else if (search) {return "search";}
+  else if (display) {return "display";}
+  else {return "none";}
+}
+
+/**
  * Sets budget of active campaings to a default value.
  * Values: {Poslovni49: 0.15, Poslovni99: 0.30, Poslovni199: 0.60, Poslovni399: 1.00}
  * @param acc: account to set default budget in
@@ -504,7 +530,16 @@ function adjustBudgetGAdW(acc, company, owner, pausedByScript, emailTotalSentByS
   var clicksTSmediaPerDay = clicksTSmedia / daysRunning;
   var clicksTSmediaProjected = Math.floor(clicksTSmediaPerDay * daysRemaining);
   if (getDaysRemaining() <= 15 && (clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) < 0.75) { // send email alert if 15 or less days in month remaining and if campaign underperforming (ratio of generated total clicks / total goal to days running / total days is < 75%)
-    sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+    var running = checkRunningCampaigns(acc);
+    if (running === "search") {
+      startDisplayCampaigns(acc);
+      sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nDisplay campaign(s) activated!");
+    } else if (running === "display") {
+      startSearchCampaigns(acc);
+      sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nSearch campaign(s) activated!");
+    } else {
+      sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+    }
     //sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
   }
   if (company.getClicksTSmedia() >= company.getGoalTSmedia()) {

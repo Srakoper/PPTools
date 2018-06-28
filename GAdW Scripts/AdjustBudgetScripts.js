@@ -308,42 +308,31 @@ function startAllCampaigns(acc) {
 }
 
 /**
- * Starts all SEARCH campaings, pauses all other campaigns.
- * @param acc: account to start SEARCH campaigns/pause others within
+ * Starts all SEARCH campaings.
+ * @param acc: account to start SEARCH campaigns
  */
 function startSearchCampaigns(acc) {
   MccApp.select(acc);
-  try {
-    acc.removeLabel("PausedByScript"); // removes any PausedByScript label
-  } catch (err) {}
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
     if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
       if (campaign.getName().toLowerCase().search("search") > -1) campaign.enable();
-      else campaign.pause();
     }
   }
 }
 
 /**
- * Starts all DISPLAY campaings, pauses all other campaigns.
- * @param acc: account to start DISPLAY campaigns/pause others within
+ * Starts all DISPLAY campaings.
+ * @param acc: account to start DISPLAY campaigns
  */
 function startDisplayCampaigns(acc) {
   MccApp.select(acc);
-  try {
-    acc.removeLabel("StoppedByScript"); // removes any StoppedByScript label
-  } catch (err) {}
-  try {
-    acc.removeLabel("PausedByScript"); // removes any PausedByScript label
-  } catch (err) {}
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
     if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
       if (campaign.getName().toLowerCase().search("display") > -1) campaign.enable();
-      else campaign.pause();
     }
   }
 }

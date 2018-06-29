@@ -227,31 +227,43 @@ function startAllCampaigns(acc) {
 /**
  * Starts all SEARCH campaings.
  * @param acc: account to start SEARCH campaigns
+ * @return: boolean; true if SEARCH campaign(s) started, false otherwise
  */
 function startSearchCampaigns(acc) {
   MccApp.select(acc);
+  var started = false;
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
     if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
-      if (campaign.getName().toLowerCase().search("search") > -1) campaign.enable();
+      if (campaign.getName().toLowerCase().search("search") > -1) {
+        campaign.enable();
+        started = true;
+      }
     }
   }
+  return started;
 }
 
 /**
  * Starts all DISPLAY campaings.
  * @param acc: account to start DISPLAY campaigns
+ * @return: boolean; true if DISPLAY campaign(s) started, false otherwise
  */
 function startDisplayCampaigns(acc) {
   MccApp.select(acc);
+  var started = false;
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
     if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
-      if (campaign.getName().toLowerCase().search("display") > -1) campaign.enable();
+      if (campaign.getName().toLowerCase().search("display") > -1) {
+        campaign.enable();
+        started = true;
+      }
     }
   }
+  return started;
 }
 
 /**
@@ -438,11 +450,19 @@ function adjustBudgetGAdW(acc, company, owner, pausedByScript, emailTotalSentByS
   if (getDaysRemaining() <= 15 && (clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) < 0.75) { // send email alert if 15 or less days in month remaining and if campaign underperforming (ratio of generated total clicks / total goal to days running / total days is < 75%)
     var running = checkRunningCampaigns(acc);
     if (running === "search") {
-      startDisplayCampaigns(acc);
-      sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nDisplay campaign(s) activated!");
+      var started = startDisplayCampaigns(acc);
+      if (started) {
+        sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nDisplay campaign(s) activated!");
+      } else {
+        sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+      }
     } else if (running === "display") {
-      startSearchCampaigns(acc);
-      sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nSearch campaign(s) activated!");
+      var started = startSearchCampaigns(acc);
+      if (started) {
+        sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nSearch campaign(s) activated!");
+      } else {
+        sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+      }
     } else {
       sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
     }

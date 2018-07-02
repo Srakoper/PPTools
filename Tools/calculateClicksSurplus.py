@@ -37,15 +37,11 @@ for i in range(1, len(sheet["A"]), 2): # starts with 2nd row to omit 1st row and
         OP = sheet["C"][i].value
         surplus = packages[sheet["E"][i].value] - sheet["M"][i].value # clicks deficit if negative
         surpluses_string += "'{} - {}': {},\n".format(OP, company, surplus)
-    elif sheet["A"][i].value: # stores total clicks goal - possible clicks from previous months as new goal for custom Poslovni paket
+    elif sheet["A"][i].value: # stores total clicks goal - possible clicks from previous months as new goal for custom Poslovni paket/Preusmeritve
         company = sheet["A"][i].value
         OP = sheet["C"][i].value
-        if sheet["K"][i].value != None: previous_clicks_GAdW = sheet["K"][i].value
-        else: previous_clicks_GAdW = 0 # should normally be None on GAdW
-        if sheet["K"][i + 1].value != None: previous_clicks_TSmedia = sheet["K"][i+1].value
-        else: previous_clicks_TSmedia = 0
-        surplus = sheet["E"][i].value - (previous_clicks_GAdW + previous_clicks_TSmedia) # goal met if <= 0
-        surpluses_string += "'{}P - {}': {},\n".format(OP, company, surplus)
+        remaining = sheet["M"][i].value # goal met if <= 0
+        surpluses_string += "'{}P - {}': {},\n".format(OP, company, remaining)
 surpluses_string = surpluses_string[:-2] + "\n};"
 open(parent_dir + "Archive/Surpluses_{}-{}.txt".format(today.year, today.month if today.month >= 10 else "0" + str(today.month)), "w", encoding="UTF-8").write(surpluses_string)
 print("Clicks surplus data saved as {}Archive/Surpluses_{}-{}.txt".format(parent_dir.replace("\\\\", "/"), today.year, today.month if today.month >= 10 else "0" + str(today.month)))

@@ -176,7 +176,7 @@ except KeyError: # create sheet for new month if not existing
             clearCell(sheet[days[ii][1] + str(i + 1)], None, 0)
         for column in ("I", "J", "K", "L", "M", "N", "O", "P", "Q"): # clears values from data cells and applies grey fill
             clearCell(sheet[column + str(i + 1)], 'F2F2F2', 0)
-        for column in ("G", "H"): # clears values from G and F columns if present
+        for column in ("G", "H"): # clears values from G and H columns if present
             if i % 2 != 0 and sheet[column + str(i + 1)].value != "-": clearCell(sheet[column + str(i + 1)], 'F2F2F2', 0)
     clearCell(sheet["F" + str((counter + 1) * 2)], 'F2F2F2', 0) # clears budget value
     clearCell(sheet["G" + str((counter + 1) * 2)], 'F2F2F2', 0) # clears total cost value

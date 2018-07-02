@@ -81,7 +81,7 @@ function reportStats(period, label) {
         }
       }
     // building string
-    string = string +
+    string = string + 
       		 (paused ? accName + " [PAUSED]" : accName) + "\n" +
       		 "impressions: " + stats[0] + "\n" +
              "clicks: " + stats[1] + "\n" +
@@ -119,7 +119,7 @@ function sendEmail(recipient, subject, body, message, attachment, mimetype) {
 function main() {
   var today = new Date();
   if (today.getHours() > 14) today.setHours(24); // sets day +1 for timezone -9 h from Ljubljana
-  if (today.getDate() === 1) { // sends reports for previous month on 1st of current month
+  if (today.getDate() === 2) { // sends reports for previous month on 1st of current month
     var previous = getPrevMonth();
   	//var reports_DMI = reportStats("LAST_MONTH", "DMI");
     //var reports_MCE = reportStats("LAST_MONTH", "MČE");
@@ -127,8 +127,8 @@ function main() {
     // sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'DMI', Previous Month ", reports_DMI[0], reports_DMI[2], "GAdW_JSON_prev_month.txt", 'text/plain');
     // sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'MČE', Previous Month ", reports_MCE[0], reports_MCE[2], "GAdW_JSON_prev_month.txt", 'text/plain');
     // sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'MČE', Previous Month ", reports_MCE[0], reports_MCE[2], "GAdW_JSON_prev_month.txt", 'text/plain');
-    sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_prev_month.txt", 'text/plain');
-    sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_prev_month.txt", 'text/plain');
+    sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
+    sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
     sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month, CSV ", reports_Aktivne[0], reports_Aktivne[1], "GAdW_CSV_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".csv", 'text/csv');
     //sendEmail("damjan.mihelic@tsmedia.si", "String test", reports[0]);
   }

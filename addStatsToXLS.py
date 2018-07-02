@@ -361,9 +361,9 @@ for i in range(1, len(companies), 2): # applies gray fill for all days if only T
                     sheet[days[j][1]][apply_grey[0]].fill = grey
 # clicks from previous month on GAdW
 try:
-    imported_prev = json.loads(sub(r"\s{2,}", " ", sub(r"\n", " ", open("GAdW_JSON_prev_month.txt", encoding="UTF-8").read())))
+    imported_prev = json.loads(sub(r"\s{2,}", " ", sub(r"\n", " ", open("GAdW_JSON_{}-{}.txt".format(prev_month_year, prev_month_month), encoding="UTF-8").read())))
     stats_prev = imported_prev["stats"]
-    for i in range(1, len(sheet["A"]), 2): # clears values from columns "G" through "Q" and removes fill iff GAdW_JSON_prev_month.txt found
+    for i in range(1, len(sheet["A"]), 2): # clears values from columns "G" through "Q" and removes fill iff GAdW_JSON_YYYY-MM.txt found
         if sheet["A"][i].value:
             for column in ["G", "H", "J"]:
                 sheet[column + str(i + 1)].value = None
@@ -378,7 +378,7 @@ try:
             try:
                 if sheet["K" + str(i + 1)].value in [None, 0]: sheet["K" + str(i + 1)] = stats_prev[sheet["C"][i].value][0] # ignores if values are already set
             except KeyError: print("{} / {} not found in GAdW stats.".format(companies[i].value, sheet["C"][i].value))
-except FileNotFoundError: print("GAdW_JSON_prev_month.txt not found.")
+except FileNotFoundError: print("GAdW_JSON_{}-{}.txt".format(prev_month_year, prev_month_month) + " not found.")
 # clicks from previous month on TSmedia
 try:
     with open("campaign-ctr-{}-{}.csv".format(prev_month_year, prev_month_month), encoding="UTF-8") as TSmedia_prev:

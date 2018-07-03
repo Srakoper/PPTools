@@ -10,7 +10,87 @@ var ignore = ['Vsevid d.o.o.',
  * Deficits of clicks are represented by a negative value (e.g. -10).
  * Modified manually at the beginning of month.
  */
-var surpluses = {};
+var surpluses =
+{// surplus data for 2018-07
+'OP0710307 - Impol servis, d.o.o.': -1,
+'OP0716086 - Dvigala Bartol, d.o.o.': 16,
+'OP0726257 - Agrokor, d.o.o.': 6,
+'OP0729885 - Matjaž Zorman, s.p.': 1,
+'OP0733080 - Novomat, d.o.o.': 6,
+'OP0727117 - Rono senčila, d.o.o.': 1,
+'OP0723074 - Granim, d.o.o.': 1,
+'OP0733905 - ProFarm Košenina, d.o.o.': -88,
+'OP0774728 - Interlogis, d.o.o.': 2,
+'OP0737406 - Lokatrade Škofja Loka, d.o.o.': 26,
+'OP0752118 - Avtosteklo, d.o.o.': 11,
+'OP0752159 - Maksimum, d.o.o.': 10,
+'OP0752753 - Dr. Konekt, d.o.o.': 1,
+'OP0773577 - ZUKD Grad': 9,
+'OP0760719 - Geodeti, d.o.o.': 40,
+'OP0757821 - Orthops, d.o.o.': -2,
+'OP0766681 - Slovensko združenje Taijiquan Hram CSN': 4,
+'OP0761010 - HTE, d.o.o.': 0,
+'OP0761613 - Pirh, d.o.o.': 3,
+'OP0716593 - HM Storitve d.o.o.': 32,
+'OP0716597 - KMC d.o.o.': 0,
+'OP0730943 - Zip center d.o.o.': 10,
+'OP0712780 - Odmera d.o.o.': 4,
+'OP0712860 - Dental Design d.o.o.': 23,
+'OP0748615 - Mlakar Jožko s.p.': 2,
+'OP0715972 - Vsevid d.o.o.': 18,
+'OP0716470 - Inventio d.o.o.': 82,
+'OP0711400 - Saša d.o.o.': 6,
+'OP0714615 - Converta d.o.o.': 10,
+'OP0714511 - Dental Art d.o.o.': 40,
+'OP0733404 - Bojan Burja s.p.': 2,
+'OP0714167 - Topel dom, Zoran Šircelj s.p.': 24,
+'OP0713997 - Birokrat IT d.o.o.': 16,
+'OP0747107 - IZUM': 22,
+'OP0728526 - Elektrostik, Bogdan Rupnik s.p.': 2,
+'OP0747178 - Grajzar d.o.o.': 6,
+'OP0714760 - Profit d.o.o., Ljubljana': 29,
+'OP0710997 - Hernec d.o.o.': 0,
+'OP0724668 - RTI d.o.o.': 2,
+'OP0732703 - Tatalović d.o.o.': 3,
+'OP0715538 - Očesni kirurški center dr. Pfeifer d.o.o.': 23,
+'OP0710683 - Karnion d.o.o.': 7,
+'OP0722693 - GM Skupina d.o.o.': 6,
+'OP0749734 - Hoteli Bernardin d.d.': 6,
+'OP0765539 - Termopol, d.o.o.': 4,
+'OP0767222P - Prima Filtertehnika d.o.o.': 124,
+'OP0768357P - Milan Matko s.p.': 26,
+'OP0762351 - Superstar - Cvetana Rozman s.p.': 7,
+'OP0768382P - Dinos d.d. - ZAČASNO USTAVLJENA': 75,
+'OP0768553P - Srednja zdravstvena šola Celje - AKTIVACIJA ZOPET POLETI': 160,
+'OP0768822 - Franc Kemperle': 4,
+'OP0768826P - Stopar design, d.o.o.': 618,
+'OP0769954 - Kast, d.o.o.': 10,
+'OP0770034 - Primož Žunter, s.p.': -33,
+'OP0770201P - Marnit d.o.o.': 218,
+'OP0767407P - TMD Invest d.o.o.': 399,
+'OP0770373P - Milena Žuran, s.p.': 64,
+'OP0770041P - Istrabenz plini d.o.o.': 9,
+'OP0770880P - Trakom, d.o.o.': 272,
+'OP0771875P - Baumuller Dravinja, d.o.o.': 0,
+'OP0773171P - Ika, d.o.o.': 387,
+'OP0774862P - Lichtenegger d.o.o.': 335,
+'OP0774669P - Lassana d.d.': 424,
+'OP0775384P - Ultramarin, d.o.o.': 304,
+'OP0775289P - Trelleborg Slovenija, d.o.o.': 210,
+'OP0775790P - Apolonija Strehar, s.p.': 347,
+'OP0774854P - Vrtec Velenje': 268,
+'OP0776132P - Tekoma Marguč, d.o.o.': 392,
+'OP0775504P - Soča-URI': 950,
+'OP0775587P - Vaš dom d.o.o.': 127,
+'OP0775997P - Liko Liboje d.d.': 487,
+'OP0774661P - Kego d.o.o.': 308,
+'OP0776282P - Marija Polak Rožič s.p.': 474,
+'OP0775325P - AVV d.o.o.': 142,
+'OP0777167P - Tomaž Luštrek, s.p.': 166,
+'OP0777489P - SMM, d.o.o.': 784,
+'OP0777761P - Gabrijela Ludvig-Zagožen': 88,
+'OP0777500P - Alpeks, d.o.o.': 498
+};
 
 /**
  * Fetches OP from campaign name(s) by iterating over campaigns in campaign iterator.
@@ -229,16 +309,35 @@ function startAllCampaigns(acc) {
  * @param acc: account to start SEARCH campaigns
  * @return: boolean; true if SEARCH campaign(s) started, false otherwise
  */
-function startSearchCampaigns(acc) {
+function startSearchCampaigns(acc, budget) {
   MccApp.select(acc);
   var started = false;
+  var campaigns = [];
+  if (typeof budget === "number") {
+    var setBudget = budget;
+  } else {
+    var setBudget = false;
+  }
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
     if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
       if (campaign.getName().toLowerCase().search("search") > -1) {
         campaign.enable();
+        campaigns.push(campaign.getName());
         started = true;
+      }
+    }
+  }
+  if (campaigns && budget) {
+    var budgetIterator = AdWordsApp.budgets().get();
+    while (budgetIterator.hasNext()) {
+      var budget = budgetIterator.next();
+      for (var i = 0; i < campaigns.length; i++) {
+        if (campaigns[i].indexOf(budget.getName()) > -1) {
+          budget.setAmount(budget);
+          break;
+        }
       }
     }
   }
@@ -248,18 +347,38 @@ function startSearchCampaigns(acc) {
 /**
  * Starts all DISPLAY campaings.
  * @param acc: account to start DISPLAY campaigns
+ * @param budget: float; optional - value to set budget of activated campaign(s) to, must be a number
  * @return: boolean; true if DISPLAY campaign(s) started, false otherwise
  */
-function startDisplayCampaigns(acc) {
+function startDisplayCampaigns(acc, budget) {
   MccApp.select(acc);
   var started = false;
+  var campaigns = [];
+  if (typeof budget === "number") {
+    var setBudget = budget;
+  } else {
+    var setBudget = false;
+  }
   var campaignIterator = AdWordsApp.campaigns().get();
   while (campaignIterator.hasNext()) {
     var campaign = campaignIterator.next();
     if (campaign.getName().substring(0, 2).toLowerCase() === "op") { // ignores campaigns not starting with OP
       if (campaign.getName().toLowerCase().search("display") > -1) {
         campaign.enable();
+        campaigns.push(campaign.getName());
         started = true;
+      }
+    }
+  }
+  if (campaigns && budget) {
+    var budgetIterator = AdWordsApp.budgets().get();
+    while (budgetIterator.hasNext()) {
+      var budget = budgetIterator.next();
+      for (var i = 0; i < campaigns.length; i++) {
+        if (campaigns[i].indexOf(budget.getName()) > -1) {
+          budget.setAmount(budget);
+          break;
+        }
       }
     }
   }
@@ -450,23 +569,27 @@ function adjustBudgetGAdW(acc, company, owner, pausedByScript, emailTotalSentByS
   if (getDaysRemaining() <= 15 && (clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) < 0.75) { // send email alert if 15 or less days in month remaining and if campaign underperforming (ratio of generated total clicks / total goal to days running / total days is < 75%)
     var running = checkRunningCampaigns(acc);
     if (running === "search") {
-      var started = startDisplayCampaigns(acc);
+      var started = startDisplayCampaigns(acc, 2.0);
       if (started) {
         sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nDisplay campaign(s) activated!");
+        sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
       } else {
         sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+        sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
       }
     } else if (running === "display") {
-      var started = startSearchCampaigns(acc);
+      var started = startSearchCampaigns(acc, 2.0);
       if (started) {
         sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance\n\nSearch campaign(s) activated!");
+        sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
       } else {
         sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+        sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
       }
     } else {
       sendEmail("damjan.mihelic@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
+      sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
     }
-    //sendEmail("maja.cebulj@tsmedia.si", "Poslovni paket campain underperforming", "", "Account: " + company.getName() + "\nTotal clicks/goal: " + clicksTotal + "/" + goalTotal + "\n" + Math.round((clicksTotal / goalTotal) / (daysRunning / (daysRunning + daysRemaining - 1)) * 100) + "% performance");
   }
   if (company.getClicksTSmedia() >= company.getGoalTSmedia()) {
     if (!(emailTSmediaSentByScript)) { // send email alert if TSmedia clicks goal met and email not yet sent

@@ -56,6 +56,8 @@ if exceptions_prev: # adds exceptions data if exceptions found
             if row[0] == OP: # if OP from total data matches OP from exceptions data, clicks are summed
                 row[2] = row[2] + exceptions_prev[OP]
                 break
+for row in total_prev: row.append("insert into crm..DAILY_STATISTICS_GOOGLE_ADWORDS (campaign, clicks, impressions, datum, datum_vpisa) select '{}','{}','{}', DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE())-1, 0), getdate();".format(row[0], row[2], row[1]))
+for row in to_append: row.append("insert into crm..DAILY_STATISTICS_GOOGLE_ADWORDS (campaign, clicks, impressions, datum, datum_vpisa) select '{}','{}','{}', DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE())-1, 0), getdate();".format(row[0], row[2], row[1]))
 while True:
     try:
         fh = open(parent_dir + "Archive\\\\" + "Poslovni Paketi {}-{}.csv".format(prev_month_year, prev_month_month), "w", newline="")

@@ -81,7 +81,7 @@ function reportStats(period, label) {
         }
       }
     // building string
-    string = string +
+    string = string + 
       		 (paused ? accName + " [PAUSED]" : accName) + "\n" +
       		 "impressions: " + stats[0] + "\n" +
              "clicks: " + stats[1] + "\n" +
@@ -120,16 +120,8 @@ function main() {
   var today = new Date();
   if (today.getHours() > 14) today.setHours(24); // sets day +1 for timezone -9 h from Ljubljana
   if (today.getDay() < 6 && today.getDay() != 0) { // senda daily reports from Monday to Friday
-  	var reports_DMI = reportStats("THIS_MONTH", "DMI");
-    var reports_MCE = reportStats("THIS_MONTH", "MČE");
     var reports_Aktivne = reportStats("THIS_MONTH", "Aktivne");
-    sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'DMI', Current Month", reports_DMI[0], reports_DMI[2], "GAdW_JSON.txt", 'text/plain');
     sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Current Month", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON.txt", 'text/plain');
     sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'Aktivne', Current Month", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON.txt", 'text/plain');
-    //sendEmail("dm.oglasi@gmail.com", "GAdW Stats Report for 'DMI', Current Month", reports_DMI[0], reports_DMI[2], "GAdW_JSON.txt", 'text/plain');
-    //sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'MČE', Current Month", reports_MCE[0], reports_MCE[2], "GAdW_JSON.txt", 'text/plain');
-    //sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'MČE', Current Month", reports_MCE[0], reports_MCE[2], "GAdW_JSON.txt", 'text/plain');
-    //sendEmail("damjan.mihelic@tsmedia.si", "CSV test", reports[1], "GAdW_CSV_" + today.getFullYear() + "-" + ((today.getMonth() + 1 >= 10) ? today.getMonth() + 1 : "0" + today.getMonth() + 1) + "-" + today.getDate() + ".csv", 'text/csv');
-    //sendEmail("damjan.mihelic@tsmedia.si", "String test", reports[0]);
   }
 }

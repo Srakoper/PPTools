@@ -286,7 +286,6 @@ with requests.Session() as s:
     login = s.post(url_login, data=payload)
     request = s.get(url_data)
     soup = bs(request.content, "html5lib")
-##### print(soup)
 campaigns_TSmedia = soup.find_all("tr")
 for campaign in campaigns_TSmedia:
     try: # IndexError skips first element in list, which is an empty list

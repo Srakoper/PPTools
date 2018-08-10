@@ -9,7 +9,7 @@ Removes rows from TSmedia data containing 0 impression and 0 clicks (assumed ina
 from os import getcwd, path
 from os.path import dirname
 from datetime import date
-from csv import reader, writer, register_dialect, QUOTE_NONE
+from csv import reader, writer, register_dialect, QUOTE_MINIMAL
 from json import load
 
 def getCSVdata(file, dlm=","):
@@ -32,7 +32,7 @@ if prev_month_month == 0:
 prev_month_month = str(prev_month_month)
 if len(prev_month_month) == 1: prev_month_month = "0" + prev_month_month
 prev_month_year = str(prev_month_year)
-register_dialect('myDialect', delimiter=';', quoting=QUOTE_NONE)
+register_dialect('myDialect', delimiter=';', quoting=QUOTE_MINIMAL)
 GAdW_prev = getCSVdata(parent_dir.replace("\\\\", "/") + "Archive/GAdW_CSV_{}-{}.csv".format(prev_month_year, prev_month_month), ";")
 TSmedia_prev = [row[:7] for row in list(filter(lambda row: int(row[3]) + int(row[4]) != 0 and int(row[3]) >= int(row[4]), list(filter(lambda row: "custom" not in row[6], getCSVdata(parent_dir.replace("\\\\", "/") + "Archive/campaign-ctr-{}-{}.csv".format(prev_month_year, prev_month_month), ";")[1:]))))]
 exceptions_prev = dict()

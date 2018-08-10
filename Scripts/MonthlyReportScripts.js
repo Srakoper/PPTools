@@ -119,7 +119,7 @@ function sendEmail(recipient, subject, body, message, attachment, mimetype) {
 function main() {
   var today = new Date();
   if (today.getHours() > 14) today.setHours(24); // sets day +1 for timezone -9 h from Ljubljana
-  if (today.getDate() === 2) { // sends reports for previous month on 1st of current month
+  if (today.getDate() === 1) { // sends reports for previous month on 1st of current month
     var previous = getPrevMonth();
   	//var reports_DMI = reportStats("LAST_MONTH", "DMI");
     //var reports_MCE = reportStats("LAST_MONTH", "MČE");

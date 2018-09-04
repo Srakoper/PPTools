@@ -401,10 +401,15 @@ sheet_prev_month = wb[months[int(prev_month_month)] + " " + prev_month_year[2:]]
 goals_prev_month = dict()
 for i in range(1, len(sheet_prev_month["L"]), 2):
     if sheet_prev_month["A"][i].value:
-        goals_prev_month[sheet_prev_month["C"][i].value] = sheet_prev_month["L"][i].value + sheet_prev_month["L"][i+1].value
+        try: goals_prev_month[sheet_prev_month["C"][i].value] = sheet_prev_month["L"][i].value + sheet_prev_month["L"][i+1].value
+        except TypeError:
+            while True:
+                terminate = input("\nNo goals specified in previous month sheet for company {}. Specify goals (Poslovni paket / Preusmeritve) for {} in column L of sheet {}, save the table and rerun the script. Press any key + ENTER to terminate. ".format(sheet_prev_month["A"][i].value, sheet_prev_month["A"][i].value, sheet_prev_month.title))
+                if terminate: quit()
 for i in range(1, len(sheet["A"]), 2):
     if sheet["A"][i].value and not sheet["L"][i].value and not sheet["L"][i+1].value: # ignores if goals fields have values (assuming goals already set)
-        sheet["K" + str(i + 2)] = sheet["K"][i+1].value + exceptions_prev.get(sheet["C"][i].value, 0) # adds possible exceptions value to TSmedia previous month value
+        try: sheet["K" + str(i + 2)] = sheet["K"][i+1].value + exceptions_prev.get(sheet["C"][i].value, 0) # adds possible exceptions value to TSmedia previous month value
+        except TypeError: sheet["K" + str(i + 2)] = 0 + exceptions_prev.get(sheet["C"][i].value, 0)
         GAdW_clicks = sheet["K"][i].value
         TSmedia_clicks = sheet["K"][i+1].value
         if not GAdW_clicks: GAdW_clicks = 0 # if value of clicks is NoneType
@@ -500,7 +505,11 @@ for i in range(1, len(sheet["A"]), 2): # starts with 2nd row to omit 1st row and
                 else: sheet["L"][i].fill = red
                 if not sheet["G"][i].value or value[2] > sheet["G"][i].value:
                     sheet["G" + str(i + 1)] = value[2] # updates cost only if old value is lower or None
-                sheet["H" + str(i + 1)] = sheet["G"][i].value / sheet["F"][i].value
+                try: sheet["H" + str(i + 1)] = sheet["G"][i].value / sheet["F"][i].value
+                except TypeError:
+                    while True:
+                        terminate = input("\nPlease specify budget in column F of the table for company {}, save the table and rerun the script. Press any key + ENTER to terminate. ".format(sheet["A"][i].value))
+                        if terminate: quit()
                 try:
                     if sheet["G"][i].value / sheet["F"][i].value > 1: sheet["H"][i].fill = red
                     elif sheet["G"][i].value / sheet["F"][i].value >= 0.75: sheet["H"][i].fill = orange

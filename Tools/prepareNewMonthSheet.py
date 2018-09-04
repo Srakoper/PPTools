@@ -156,7 +156,8 @@ except KeyError: # create sheet for new month if not existing
             last_found_month = 12
             last_found_year = last_found_year - decrement_year
         try:
-            last_found_sheet = wb[months[last_found_month] + " " + str(last_found_year)[2:]]
+            last_found_sheet = wb["AVG 18"]
+            #last_found_sheet = wb[months[last_found_month] + " " + str(last_found_year)[2:]]
             sheet = wb.copy_worksheet(last_found_sheet)
             sheet.title = month + " " + year
             break

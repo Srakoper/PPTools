@@ -81,7 +81,7 @@ function reportStats(period, label) {
         }
       }
     // building string
-    string = string + 
+    string = string +
       		 (paused ? accName + " [PAUSED]" : accName) + "\n" +
       		 "impressions: " + stats[0] + "\n" +
              "clicks: " + stats[1] + "\n" +
@@ -127,9 +127,14 @@ function main() {
     // sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'DMI', Previous Month ", reports_DMI[0], reports_DMI[2], "GAdW_JSON_prev_month.txt", 'text/plain');
     // sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'MČE', Previous Month ", reports_MCE[0], reports_MCE[2], "GAdW_JSON_prev_month.txt", 'text/plain');
     // sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'MČE', Previous Month ", reports_MCE[0], reports_MCE[2], "GAdW_JSON_prev_month.txt", 'text/plain');
-    sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
+    // sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
     sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
-    sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month, CSV ", reports_Aktivne[0], reports_Aktivne[1], "GAdW_CSV_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".csv", 'text/csv');
+    sendEmail("alen.savic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
+    sendEmail("urska.grad@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month ", reports_Aktivne[0], reports_Aktivne[2], "GAdW_JSON_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".txt", 'text/plain');
+    // sendEmail("damjan.mihelic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month, CSV (for Salesforce import)", reports_Aktivne[0], reports_Aktivne[1], "GAdW_CSV_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".csv", 'text/csv');
+    sendEmail("maja.cebulj@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month, CSV (for Salesforce import)", reports_Aktivne[0], reports_Aktivne[1], "GAdW_CSV_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".csv", 'text/csv');
+    sendEmail("alen.savic@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month, CSV (for Salesforce import)", reports_Aktivne[0], reports_Aktivne[1], "GAdW_CSV_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".csv", 'text/csv');
+    sendEmail("urska.grad@tsmedia.si", "GAdW Stats Report for 'Aktivne', Previous Month, CSV (for Salesforce import)", reports_Aktivne[0], reports_Aktivne[1], "GAdW_CSV_" + previous.getFullYear() + "-" + ((previous.getMonth() + 1 >= 10) ? previous.getMonth() + 1 : "0" + String(previous.getMonth() + 1)) + ".csv", 'text/csv');
     //sendEmail("damjan.mihelic@tsmedia.si", "String test", reports[0]);
   }
 }
